@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Data Extractor Ultra - SACH L7 Deployment</title>
+    <script src="https://tailwindcss.com"></script>
+    <!-- SDK de PayPal Integrado -->
+    <script src="https://www.paypal.com/sdk/js?client-id=BAAR8eRHfTa9EoSfFhV2gnnB8YDZpUgRv5mkEDTxneHXaZezlU3mjiyQ5P-_CZG4YGu6_ArnCUivnfXCpI&components=hosted-buttons&disable-funding=venmo&currency=MXN"></script>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col justify-between font-sans">
+
+    <!-- Encabezado Principal -->
+    <header class="border-b border-slate-800 bg-slate-900/50 backdrop-blur py-4 px-6">
+        <div class="max-w-6xl mx-auto flex justify-between items-center">
+            <span class="text-xl font-black tracking-wider text-cyan-400">SACH L7 // EXTRACTOR</span>
+            <span class="text-xs bg-emerald-500/10 text-emerald-400 px-2 py-1 rounded-full border border-emerald-500/20 font-mono">STATUS: LIGHTS-OUT OPERATIONAL</span>
+        </div>
+    </</header>
+
+    <!-- Cuerpo de la Aplicación -->
+    <main class="max-w-4xl mx-auto p-6 w-full flex-grow flex flex-col justify-center items-center">
+        <div class="w-full bg-slate-900 border border-slate-800 rounded-2xl p-8 shadow-2xl space-y-8">
+            <div class="text-center space-y-2">
+                <h1 class="text-4xl font-extrabold tracking-tight bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent">Extractor de Datos Inteligente</h1>
+                <p class="text-slate-400 max-w-lg mx-auto">Sube cualquier texto plano, JSON corrupto o código y deja que el Wrapper de IA lo estructure en tablas limpias al instante.</p>
+            </div>
+
+            <!-- Interfaz de Procesamiento Bloqueada por Defecto -->
+            <div class="border-2 border-dashed border-slate-800 rounded-xl p-8 text-center bg-slate-950/40 relative overflow-hidden group">
+                <div class="absolute inset-0 bg-slate-950/80 backdrop-blur-sm flex flex-col items-center justify-center p-4 space-y-4">
+                    <div class="bg-cyan-500/10 text-cyan-400 p-3 rounded-full border border-cyan-500/20">
+                        <svg xmlns="http://w3.org" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" /></svg>
+                    </div>
+                    <p class="text-sm font-semibold tracking-wide uppercase text-slate-300">Activación de Licencia Requerida</p>
+                    <p class="text-xs text-slate-400 max-w-sm">Adquiere acceso instantáneo mediante PayPal o transferencia bancaria directa para desbloquear las llamadas a la API de extracción.</p>
+                    
+                    <!-- Contenedor Dinámico del Botón de PayPal -->
+                    <div class="w-full max-w-xs pt-2">
+                        <div id="paypal-container-DNFTXEA3CFPGA"></div>
+                    </div>
+
+                    <!-- Vías Alternativas de Liquidación (SPEI / DIMO) -->
+                    <div class="text-left w-full max-w-xs border-t border-slate-800 pt-4 space-y-2 text-[11px] text-slate-400 font-mono">
+                        <p class="text-center font-sans text-xs font-bold text-slate-300">Vías de Transferencia Directa:</p>
+                        <p><span class="text-cyan-400">CLABE:</span> 722969017703871980</p>
+                        <p><span class="text-cyan-400">DIMO:</span> 527351118388</p>
+                        <p class="italic text-[10px] text-slate-500">Envía tu comprobante para la generación manual de tu token de acceso.</p>
+                    </div>
+                </div>
+
+                <!-- Elementos visuales del fondo (simulación de la app) -->
+                <textarea class="w-full h-32 bg-slate-900 border border-slate-800 rounded p-2 text-xs text-slate-600 pointer-events-none" disabled>Esperando entrada de datos corporativos...</textarea>
+                <button class="mt-4 bg-slate-800 text-slate-600 px-4 py-2 rounded text-sm font-bold pointer-events-none" disabled>Procesar Datos</button>
+            </div>
+        </div>
+    </main>
+
+    <!-- Pie de Página Legal Obligatorio -->
+    <footer class="border-t border-slate-900 bg-slate-950 py-4 px-6 text-center text-xs text-slate-500 space-y-1">
+        <p>&copy; 2026 AMIRANY HERNANDEZ GONZALEZ. Todos los derechos reservados.</p>
+        <p class="text-[10px] text-slate-600">Operado de forma autónoma bajo el protocolo de hiperautomatización e infraestructura serverless Lights-Out.</p>
+    </footer>
+
+    <!-- Lógica de Renderizado del Botón de Pago -->
+    <script>
+        paypal.HostedButtons({
+            hostedButtonId: "DNFTXEA3CFPGA",
+        }).render("#paypal-container-DNFTXEA3CFPGA");
+    </script>
+</body>
+</html>
