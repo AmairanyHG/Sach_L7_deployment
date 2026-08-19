@@ -1,9 +1,9 @@
 {
-  "name": "sach-l7-backend",
+  "name": "sach-l7-completo-real",
   "version": "1.0.0",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js"
+    "start": "node server.js & node marketing_bot.js"
   },
   "dependencies": {
     "cors": "^2.8.5",
