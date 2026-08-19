@@ -5,12 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AI Data Extractor Ultra - SACH L7 Deployment</title>
     <script src="https://tailwindcss.com"></script>
-    <!-- SDK de PayPal Integrado Real -->
     <script src="https://paypal.com"></script>
 </head>
 <body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col justify-between font-sans">
 
-    <!-- Encabezado Principal -->
     <header class="border-b border-slate-800 bg-slate-900/50 backdrop-blur py-4 px-6">
         <div class="max-w-6xl mx-auto flex justify-between items-center">
             <span class="text-xl font-black tracking-wider text-cyan-400">SACH L7 // EXTRACTOR</span>
@@ -18,7 +16,6 @@
         </div>
     </header>
 
-    <!-- Cuerpo de la Aplicación -->
     <main class="max-w-4xl mx-auto p-6 w-full flex-grow flex flex-col justify-center items-center">
         <div class="w-full bg-slate-900 border border-slate-800 rounded-2xl p-8 shadow-2xl space-y-8">
             <div class="text-center space-y-2">
@@ -26,7 +23,6 @@
                 <p class="text-slate-400 max-w-lg mx-auto">Sube cualquier texto plano, JSON corrupto o código y deja que el Wrapper de IA lo estructure en tablas limpias al instante.</p>
             </div>
 
-            <!-- Interfaz Operativa Real -->
             <div class="border border-slate-800 rounded-xl p-6 bg-slate-950/40 space-y-4">
                 <label class="block text-xs font-mono uppercase tracking-widest text-slate-400">Texto o Datos a Procesar:</label>
                 <textarea id="input-datos" class="w-full h-32 bg-slate-900 border border-slate-800 rounded-lg p-3 text-sm text-slate-100 placeholder-slate-600 focus:outline-none focus:border-cyan-500 font-mono" placeholder="Pega aquí tus datos corruptos, listas desordenadas o textos sucios..."></textarea>
@@ -42,14 +38,12 @@
                     </div>
                 </div>
 
-                <!-- Caja de Resultados de la IA -->
                 <div id="contenedor-resultado" class="mt-6 p-4 bg-slate-950 border border-slate-850 rounded-lg hidden">
                     <p class="text-xs font-mono text-slate-400 border-b border-slate-800 pb-2 mb-2 uppercase tracking-wider text-cyan-500">Resultado Estructurado por OpenAI:</p>
                     <pre id="resultado-ia" class="text-sm font-mono text-slate-200 whitespace-pre-wrap overflow-x-auto"></pre>
                 </div>
             </div>
 
-            <!-- Módulo de Recaudación Comercial Directa (El Bloqueo de Licencias) -->
             <div class="border border-slate-800 bg-slate-950/60 rounded-xl p-6 space-y-6">
                 <div class="text-center space-y-1">
                     <h2 class="text-lg font-bold text-slate-200">¿No tienes un Token de Acceso Comercial?</h2>
@@ -57,7 +51,6 @@
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
-                    <!-- Columna 1: Botón de Pago PayPal -->
                     <div class="flex flex-col items-center justify-center p-4 bg-slate-900/40 border border-slate-850 rounded-lg">
                         <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-4">Pago con Tarjeta Global:</p>
                         <div class="w-full max-w-xs">
@@ -65,7 +58,6 @@
                         </div>
                     </div>
 
-                    <!-- Columna 2: Datos de Liquidación SPEI / DIMO -->
                     <div class="p-5 bg-slate-900/40 border border-slate-850 rounded-lg space-y-3 font-mono text-xs text-slate-300">
                         <p class="font-sans text-xs font-bold text-slate-400 uppercase tracking-wider text-center border-b border-slate-800 pb-2">Transferencia Directa (México):</p>
                         <p class="flex justify-between"><span class="text-slate-500">Banco:</span> <span class="text-slate-100">Mercado Pago</span></p>
@@ -78,20 +70,16 @@
         </div>
     </main>
 
-    <!-- Pie de Página Comercial y Legal Obligatorio -->
     <footer class="border-t border-slate-900 bg-slate-950 py-4 px-6 text-center text-xs text-slate-500 space-y-1">
         <p>&copy; 2026 AMIRANY HERNANDEZ GONZALEZ. Todos los derechos reservados.</p>
         <p class="text-[10px] text-slate-600 font-mono uppercase tracking-wider">MÓDULO DE LIQUIDACIÓN Y CASHFLOW DEPLOYMENT ACTIVO • INFRAESTRUCTURA SERVERLESS S9</p>
     </footer>
 
-    <!-- Lógica de Operación del Ecosistema -->
     <script>
-        // Inicialización instantánea del botón alojado de PayPal
         paypal.HostedButtons({
             hostedButtonId: "DNFTXEA3CFPGA",
         }).render("#paypal-container-DNFTXEA3CFPGA");
 
-        // Ejecución técnica de la llamada a la API de OpenAI a través de tu servidor en Render
         async function procesarConIA() {
             const datosUsuario = document.getElementById("input-datos").value;
             const contenedor = document.getElementById("contenedor-resultado");
@@ -102,13 +90,11 @@
                 return alert("Por favor, introduce algún texto o bloque de datos para formatear.");
             }
 
-            // Mostrar área de carga
             contenedor.classList.remove("hidden");
             pantallaResultado.innerText = "Estableciendo conexión perimetral con OpenAI... Procesando datos...";
 
             try {
-                // Petición real HTTP POST hacia la URL de tu motor en Render
-                const respuesta = await fetch("https://onrender.com", {
+                const respuesta = await fetch("/api/extract", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({ 
@@ -122,7 +108,6 @@
                 if (respuestaJSON.error) {
                     pantallaResultado.innerText = "Error en la validación: " + respuestaJSON.error;
                 } else {
-                    // Inyección en pantalla del resultado real procesado por GPT-4o-mini
                     pantallaResultado.innerText = respuestaJSON.result;
                 }
             } catch (error) {
