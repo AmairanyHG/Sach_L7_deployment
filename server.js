@@ -1,47 +1,142 @@
 const express = require('express');
 const cors = require('cors');
-const path = require('path');
-const fs = require('fs');
 const { OpenAI } = require('openai');
 
 const app = express();
 app.use(cors());
 app.use(express.json());
 
-// Forzar la lectura de index.html sin importar dónde lo haya colocado Git
-function buscarIndexHTML(dir) {
-  const archivos = fs.readdirSync(dir);
-  for (const archivo of archivos) {
-    const rutaCompleta = path.join(dir, archivo);
-    if (fs.statSync(rutaCompleta).isDirectory()) {
-      if (archivo !== 'node_modules' && !archivo.startsWith('.')) {
-        const encontrado = buscarIndexHTML(rutaCompleta);
-        if (encontrado) return encontrado;
-      }
-    } else if (archivo === 'index.html') {
-      return rutaCompleta;
-    }
-  }
-  return null;
-}
-
-const rutaRaizIndex = buscarIndexHTML(__dirname) || path.join(__dirname, 'index.html');
-if (fs.existsSync(rutaRaizIndex)) {
-  app.use(express.static(path.dirname(rutaRaizIndex)));
-}
-
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY
 });
 
+// ENTREGA AUTOMÁTICA: La Landing Page está integrada directamente en la memoria del servidor
 app.get('/', (req, res) => {
-  if (fs.existsSync(rutaRaizIndex)) {
-    res.sendFile(rutaRaizIndex);
-  } else {
-    res.status(404).send("Error crítico: Archivo index.html no encontrado en ninguna ruta del proyecto.");
-  }
+  res.send(`
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Data Extractor Ultra - SACH L7 Deployment</title>
+    <script src="https://tailwindcss.com"></script>
+    <script src="https://paypal.com"></script>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col justify-between font-sans">
+
+    <header class="border-b border-slate-800 bg-slate-900/50 backdrop-blur py-4 px-6">
+        <div class="max-w-6xl mx-auto flex justify-between items-center">
+            <span class="text-xl font-black tracking-wider text-cyan-400">SACH L7 // EXTRACTOR</span>
+            <span class="text-xs bg-emerald-500/10 text-emerald-400 px-2 py-1 rounded-full border border-emerald-500/20 font-mono">STATUS: LIGHTS-OUT OPERATIONAL</span>
+        </div>
+    </header>
+
+    <main class="max-w-4xl mx-auto p-6 w-full flex-grow flex flex-col justify-center items-center">
+        <div class="w-full bg-slate-900 border border-slate-800 rounded-2xl p-8 shadow-2xl space-y-8">
+            <div class="text-center space-y-2">
+                <h1 class="text-4xl font-extrabold tracking-tight bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent">Extractor de Datos Inteligente</h1>
+                <p class="text-slate-400 max-w-lg mx-auto">Sube cualquier texto plano, JSON corrupto o código y deja que el Wrapper de IA lo estructure en tablas limpias al instante.</p>
+            </div>
+
+            <div class="border border-slate-800 rounded-xl p-6 bg-slate-950/40 space-y-4">
+                <label class="block text-xs font-mono uppercase tracking-widest text-slate-400">Texto o Datos a Procesar:</label>
+                <textarea id="input-datos" class="w-full h-32 bg-slate-900 border border-slate-800 rounded-lg p-3 text-sm text-slate-100 placeholder-slate-600 focus:outline-none focus:border-cyan-500 font-mono" placeholder="Pega aquí tus datos corruptos, listas desordenadas o textos sucios..."></textarea>
+                
+                <div class="flex flex-col sm:flex-row gap-4 items-center justify-between pt-2">
+                    <div class="w-full sm:w-auto">
+                        <button onclick="procesarConIA()" class="w-full sm:w-auto bg-cyan-600 hover:bg-cyan-500 text-white font-bold py-2.5 px-6 rounded-lg transition shadow-lg shadow-cyan-950/50 text-sm tracking-wide">
+                            Procesar con IA Real
+                        </button>
+                    </div>
+                    <div class="text-right">
+                        <span class="text-xs font-mono text-slate-500">Requiere Token Activo: <code class="text-cyan-400 bg-cyan-950/30 px-1.5 py-0.5 rounded border border-cyan-900/40">ALUMNO_PRO_2026</code></span>
+                    </div>
+                </div>
+
+                <div id="contenedor-resultado" class="mt-6 p-4 bg-slate-950 border border-slate-850 rounded-lg hidden">
+                    <p class="text-xs font-mono text-slate-400 border-b border-slate-800 pb-2 mb-2 uppercase tracking-wider text-cyan-500">Resultado Estructurado por OpenAI:</p>
+                    <pre id="resultado-ia" class="text-sm font-mono text-slate-200 whitespace-pre-wrap overflow-x-auto"></pre>
+                </div>
+            </div>
+
+            <div class="border border-slate-800 bg-slate-950/60 rounded-xl p-6 space-y-6">
+                <div class="text-center space-y-1">
+                    <h2 class="text-lg font-bold text-slate-200">¿No tienes un Token de Acceso Comercial?</h2>
+                    <p class="text-xs text-slate-400">Adquiere tu licencia de uso inmediato mediante pasarela o transferencia bancaria directa.</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
+                    <div class="flex flex-col items-center justify-center p-4 bg-slate-900/40 border border-slate-850 rounded-lg">
+                        <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-4">Pago con Tarjeta Global:</p>
+                        <div class="w-full max-w-xs">
+                            <div id="paypal-container-DNFTXEA3CFPGA"></div>
+                        </div>
+                    </div>
+
+                    <div class="p-5 bg-slate-900/40 border border-slate-850 rounded-lg space-y-3 font-mono text-xs text-slate-300">
+                        <p class="font-sans text-xs font-bold text-slate-400 uppercase tracking-wider text-center border-b border-slate-800 pb-2">Transferencia Directa (México):</p>
+                        <p class="flex justify-between"><span class="text-slate-500">Banco:</span> <span class="text-slate-100">Mercado Pago</span></p>
+                        <p class="flex justify-between"><span class="text-slate-500">CLABE:</span> <span class="text-cyan-400 font-bold select-all">722969017703871980</span></p>
+                        <p class="flex justify-between"><span class="text-slate-500">DIMO:</span> <span class="text-cyan-400 font-bold select-all">527351118388</span></p>
+                        <p class="text-[10px] text-slate-500 font-sans italic text-center pt-1 border-t border-slate-850">Envía tu comprobante para la validación y entrega de tu clave.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="border-t border-slate-900 bg-slate-950 py-4 px-6 text-center text-xs text-slate-500 space-y-1">
+        <p>&copy; 2026 AMIRANY HERNANDEZ GONZALEZ. Todos los derechos reservados.</p>
+        <p class="text-[10px] text-slate-600 font-mono uppercase tracking-wider">MÓDULO DE LIQUIDACIÓN Y CASHFLOW DEPLOYMENT ACTIVO • INFRAESTRUCTURA SERVERLESS S9</p>
+    </footer>
+
+    <script>
+        paypal.HostedButtons({
+            hostedButtonId: "DNFTXEA3CFPGA",
+        }).render("#paypal-container-DNFTXEA3CFPGA");
+
+        async function procesarConIA() {
+            const datosUsuario = document.getElementById("input-datos").value;
+            const contenedor = document.getElementById("contenedor-resultado");
+            const pantallaResultado = document.getElementById("resultado-ia");
+            const tokenDeSeguridad = "ALUMNO_PRO_2026"; 
+
+            if (!datosUsuario.trim()) {
+                return alert("Por favor, introduce algún texto o bloque de datos para formatear.");
+            }
+
+            contenedor.classList.remove("hidden");
+            pantallaResultado.innerText = "Estableciendo conexión perimetral con OpenAI... Procesando datos...";
+
+            try {
+                const respuesta = await fetch("/api/extract", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ 
+                        text: datosUsuario, 
+                        token: tokenDeSeguridad 
+                    })
+                });
+
+                const respuestaJSON = await respuesta.json();
+
+                if (respuestaJSON.error) {
+                    pantallaResultado.innerText = "Error en la validación: " + respuestaJSON.error;
+                } else {
+                    pantallaResultado.innerText = respuestaJSON.result;
+                }
+            } catch (error) {
+                pantallaResultado.innerText = "Error crítico de comunicación: El backend no está respondiendo.";
+                console.error("Error en la llamada L7:", error);
+            }
+        }
+    </script>
+</body>
+</html>
+  `);
 });
 
+// Endpoint real del motor de procesamiento de IA
 app.post('/api/extract', async (req, res) => {
   const { text, token } = req.body;
 
