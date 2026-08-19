@@ -8,13 +8,12 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// Función inteligente para buscar el index.html en cualquier subcarpeta del proyecto
+// Forzar la lectura de index.html sin importar dónde lo haya colocado Git
 function buscarIndexHTML(dir) {
   const archivos = fs.readdirSync(dir);
   for (const archivo of archivos) {
     const rutaCompleta = path.join(dir, archivo);
     if (fs.statSync(rutaCompleta).isDirectory()) {
-      // Ignorar carpetas internas de sistema
       if (archivo !== 'node_modules' && !archivo.startsWith('.')) {
         const encontrado = buscarIndexHTML(rutaCompleta);
         if (encontrado) return encontrado;
@@ -26,23 +25,23 @@ function buscarIndexHTML(dir) {
   return null;
 }
 
-// Configuración de la IA leyendo tu variable oculta en Render
+const rutaRaizIndex = buscarIndexHTML(__dirname) || path.join(__dirname, 'index.html');
+if (fs.existsSync(rutaRaizIndex)) {
+  app.use(express.static(path.dirname(rutaRaizIndex)));
+}
+
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY
 });
 
-// REGLA DE ENTREGA: Buscar el index.html automáticamente donde sea que esté guardado
 app.get('/', (req, res) => {
-  const rutaIndex = buscarIndexHTML(__dirname) || path.join(__dirname, 'index.html');
-  
-  if (fs.existsSync(rutaIndex)) {
-    res.sendFile(rutaIndex);
+  if (fs.existsSync(rutaRaizIndex)) {
+    res.sendFile(rutaRaizIndex);
   } else {
-    res.status(404).send("Error crítico: El archivo index.html no se encuentra en el repositorio de GitHub. Por favor, verifica que lo hayas subido.");
+    res.status(404).send("Error crítico: Archivo index.html no encontrado en ninguna ruta del proyecto.");
   }
 });
 
-// Ruta API real para el procesamiento de datos con la IA
 app.post('/api/extract', async (req, res) => {
   const { text, token } = req.body;
 
@@ -51,7 +50,7 @@ app.post('/api/extract', async (req, res) => {
   }
 
   if (!text) {
-    return res.status(400).json({ error: "No se proporcionó ningún texto para extraer." });
+    return res.status(400).json({ error: "No se proporcionó ningún texto." });
   }
 
   try {
