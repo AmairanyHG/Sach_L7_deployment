@@ -5,8 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AI Data Extractor Ultra - SACH L7 Deployment</title>
     <script src="https://tailwindcss.com"></script>
-    <!-- SDK de PayPal Integrado -->
-    <script src="https://www.paypal.com/sdk/js?client-id=BAAR8eRHfTa9EoSfFhV2gnnB8YDZpUgRv5mkEDTxneHXaZezlU3mjiyQ5P-_CZG4YGu6_ArnCUivnfXCpI&components=hosted-buttons&disable-funding=venmo&currency=MXN"></script>
+    <!-- SDK de PayPal Integrado Real -->
+    <script src="https://paypal.com"></script>
 </head>
 <body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col justify-between font-sans">
 
@@ -16,7 +16,7 @@
             <span class="text-xl font-black tracking-wider text-cyan-400">SACH L7 // EXTRACTOR</span>
             <span class="text-xs bg-emerald-500/10 text-emerald-400 px-2 py-1 rounded-full border border-emerald-500/20 font-mono">STATUS: LIGHTS-OUT OPERATIONAL</span>
         </div>
-    </</header>
+    </header>
 
     <!-- Cuerpo de la Aplicación -->
     <main class="max-w-4xl mx-auto p-6 w-full flex-grow flex flex-col justify-center items-center">
@@ -26,47 +26,110 @@
                 <p class="text-slate-400 max-w-lg mx-auto">Sube cualquier texto plano, JSON corrupto o código y deja que el Wrapper de IA lo estructure en tablas limpias al instante.</p>
             </div>
 
-            <!-- Interfaz de Procesamiento Bloqueada por Defecto -->
-            <div class="border-2 border-dashed border-slate-800 rounded-xl p-8 text-center bg-slate-950/40 relative overflow-hidden group">
-                <div class="absolute inset-0 bg-slate-950/80 backdrop-blur-sm flex flex-col items-center justify-center p-4 space-y-4">
-                    <div class="bg-cyan-500/10 text-cyan-400 p-3 rounded-full border border-cyan-500/20">
-                        <svg xmlns="http://w3.org" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" /></svg>
+            <!-- Interfaz Operativa Real -->
+            <div class="border border-slate-800 rounded-xl p-6 bg-slate-950/40 space-y-4">
+                <label class="block text-xs font-mono uppercase tracking-widest text-slate-400">Texto o Datos a Procesar:</label>
+                <textarea id="input-datos" class="w-full h-32 bg-slate-900 border border-slate-800 rounded-lg p-3 text-sm text-slate-100 placeholder-slate-600 focus:outline-none focus:border-cyan-500 font-mono" placeholder="Pega aquí tus datos corruptos, listas desordenadas o textos sucios..."></textarea>
+                
+                <div class="flex flex-col sm:flex-row gap-4 items-center justify-between pt-2">
+                    <div class="w-full sm:w-auto">
+                        <button onclick="procesarConIA()" class="w-full sm:w-auto bg-cyan-600 hover:bg-cyan-500 text-white font-bold py-2.5 px-6 rounded-lg transition shadow-lg shadow-cyan-950/50 text-sm tracking-wide">
+                            Procesar con IA Real
+                        </button>
                     </div>
-                    <p class="text-sm font-semibold tracking-wide uppercase text-slate-300">Activación de Licencia Requerida</p>
-                    <p class="text-xs text-slate-400 max-w-sm">Adquiere acceso instantáneo mediante PayPal o transferencia bancaria directa para desbloquear las llamadas a la API de extracción.</p>
-                    
-                    <!-- Contenedor Dinámico del Botón de PayPal -->
-                    <div class="w-full max-w-xs pt-2">
-                        <div id="paypal-container-DNFTXEA3CFPGA"></div>
-                    </div>
-
-                    <!-- Vías Alternativas de Liquidación (SPEI / DIMO) -->
-                    <div class="text-left w-full max-w-xs border-t border-slate-800 pt-4 space-y-2 text-[11px] text-slate-400 font-mono">
-                        <p class="text-center font-sans text-xs font-bold text-slate-300">Vías de Transferencia Directa:</p>
-                        <p><span class="text-cyan-400">CLABE:</span> 722969017703871980</p>
-                        <p><span class="text-cyan-400">DIMO:</span> 527351118388</p>
-                        <p class="italic text-[10px] text-slate-500">Envía tu comprobante para la generación manual de tu token de acceso.</p>
+                    <div class="text-right">
+                        <span class="text-xs font-mono text-slate-500">Requiere Token Activo: <code class="text-cyan-400 bg-cyan-950/30 px-1.5 py-0.5 rounded border border-cyan-900/40">ALUMNO_PRO_2026</code></span>
                     </div>
                 </div>
 
-                <!-- Elementos visuales del fondo (simulación de la app) -->
-                <textarea class="w-full h-32 bg-slate-900 border border-slate-800 rounded p-2 text-xs text-slate-600 pointer-events-none" disabled>Esperando entrada de datos corporativos...</textarea>
-                <button class="mt-4 bg-slate-800 text-slate-600 px-4 py-2 rounded text-sm font-bold pointer-events-none" disabled>Procesar Datos</button>
+                <!-- Caja de Resultados de la IA -->
+                <div id="contenedor-resultado" class="mt-6 p-4 bg-slate-950 border border-slate-850 rounded-lg hidden">
+                    <p class="text-xs font-mono text-slate-400 border-b border-slate-800 pb-2 mb-2 uppercase tracking-wider text-cyan-500">Resultado Estructurado por OpenAI:</p>
+                    <pre id="resultado-ia" class="text-sm font-mono text-slate-200 whitespace-pre-wrap overflow-x-auto"></pre>
+                </div>
+            </div>
+
+            <!-- Módulo de Recaudación Comercial Directa (El Bloqueo de Licencias) -->
+            <div class="border border-slate-800 bg-slate-950/60 rounded-xl p-6 space-y-6">
+                <div class="text-center space-y-1">
+                    <h2 class="text-lg font-bold text-slate-200">¿No tienes un Token de Acceso Comercial?</h2>
+                    <p class="text-xs text-slate-400">Adquiere tu licencia de uso inmediato mediante pasarela o transferencia bancaria directa.</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
+                    <!-- Columna 1: Botón de Pago PayPal -->
+                    <div class="flex flex-col items-center justify-center p-4 bg-slate-900/40 border border-slate-850 rounded-lg">
+                        <p class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-4">Pago con Tarjeta Global:</p>
+                        <div class="w-full max-w-xs">
+                            <div id="paypal-container-DNFTXEA3CFPGA"></div>
+                        </div>
+                    </div>
+
+                    <!-- Columna 2: Datos de Liquidación SPEI / DIMO -->
+                    <div class="p-5 bg-slate-900/40 border border-slate-850 rounded-lg space-y-3 font-mono text-xs text-slate-300">
+                        <p class="font-sans text-xs font-bold text-slate-400 uppercase tracking-wider text-center border-b border-slate-800 pb-2">Transferencia Directa (México):</p>
+                        <p class="flex justify-between"><span class="text-slate-500">Banco:</span> <span class="text-slate-100">Mercado Pago</span></p>
+                        <p class="flex justify-between"><span class="text-slate-500">CLABE:</span> <span class="text-cyan-400 font-bold select-all">722969017703871980</span></p>
+                        <p class="flex justify-between"><span class="text-slate-500">DIMO:</span> <span class="text-cyan-400 font-bold select-all">527351118388</span></p>
+                        <p class="text-[10px] text-slate-500 font-sans italic text-center pt-1 border-t border-slate-850">Envía tu comprobante para la validación y entrega de tu clave.</p>
+                    </div>
+                </div>
             </div>
         </div>
     </main>
 
-    <!-- Pie de Página Legal Obligatorio -->
+    <!-- Pie de Página Comercial y Legal Obligatorio -->
     <footer class="border-t border-slate-900 bg-slate-950 py-4 px-6 text-center text-xs text-slate-500 space-y-1">
         <p>&copy; 2026 AMIRANY HERNANDEZ GONZALEZ. Todos los derechos reservados.</p>
-        <p class="text-[10px] text-slate-600">Operado de forma autónoma bajo el protocolo de hiperautomatización e infraestructura serverless Lights-Out.</p>
+        <p class="text-[10px] text-slate-600 font-mono uppercase tracking-wider">MÓDULO DE LIQUIDACIÓN Y CASHFLOW DEPLOYMENT ACTIVO • INFRAESTRUCTURA SERVERLESS S9</p>
     </footer>
 
-    <!-- Lógica de Renderizado del Botón de Pago -->
+    <!-- Lógica de Operación del Ecosistema -->
     <script>
+        // Inicialización instantánea del botón alojado de PayPal
         paypal.HostedButtons({
             hostedButtonId: "DNFTXEA3CFPGA",
         }).render("#paypal-container-DNFTXEA3CFPGA");
+
+        // Ejecución técnica de la llamada a la API de OpenAI a través de tu servidor en Render
+        async function procesarConIA() {
+            const datosUsuario = document.getElementById("input-datos").value;
+            const contenedor = document.getElementById("contenedor-resultado");
+            const pantallaResultado = document.getElementById("resultado-ia");
+            const tokenDeSeguridad = "ALUMNO_PRO_2026"; 
+
+            if (!datosUsuario.trim()) {
+                return alert("Por favor, introduce algún texto o bloque de datos para formatear.");
+            }
+
+            // Mostrar área de carga
+            contenedor.classList.remove("hidden");
+            pantallaResultado.innerText = "Estableciendo conexión perimetral con OpenAI... Procesando datos...";
+
+            try {
+                // Petición real HTTP POST hacia la URL de tu motor en Render
+                const respuesta = await fetch("https://onrender.com", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ 
+                        text: datosUsuario, 
+                        token: tokenDeSeguridad 
+                    })
+                });
+
+                const respuestaJSON = await respuesta.json();
+
+                if (respuestaJSON.error) {
+                    pantallaResultado.innerText = "Error en la validación: " + respuestaJSON.error;
+                } else {
+                    // Inyección en pantalla del resultado real procesado por GPT-4o-mini
+                    pantallaResultado.innerText = respuestaJSON.result;
+                }
+            } catch (error) {
+                pantallaResultado.innerText = "Error crítico de comunicación: Asegúrate de que el servidor en Render esté completamente activo.";
+                console.error("Error en la llamada L7:", error);
+            }
+        }
     </script>
 </body>
 </html>
