@@ -1,23 +1,45 @@
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
+const fs = require('fs');
 const { OpenAI } = require('openai');
 
 const app = express();
 app.use(cors());
 app.use(express.json());
 
-// CONFIGURACIÓN CLAVE: Indica al servidor que use y sirva la carpeta actual
-app.use(express.static(__dirname));
+// Función inteligente para buscar el index.html en cualquier subcarpeta del proyecto
+function buscarIndexHTML(dir) {
+  const archivos = fs.readdirSync(dir);
+  for (const archivo of archivos) {
+    const rutaCompleta = path.join(dir, archivo);
+    if (fs.statSync(rutaCompleta).isDirectory()) {
+      // Ignorar carpetas internas de sistema
+      if (archivo !== 'node_modules' && !archivo.startsWith('.')) {
+        const encontrado = buscarIndexHTML(rutaCompleta);
+        if (encontrado) return encontrado;
+      }
+    } else if (archivo === 'index.html') {
+      return rutaCompleta;
+    }
+  }
+  return null;
+}
 
 // Configuración de la IA leyendo tu variable oculta en Render
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY
 });
 
-// REGLA DE ENTREGA: Cuando alguien entre a la URL raíz (/), mándale el index.html de inmediato
+// REGLA DE ENTREGA: Buscar el index.html automáticamente donde sea que esté guardado
 app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'index.html'));
+  const rutaIndex = buscarIndexHTML(__dirname) || path.join(__dirname, 'index.html');
+  
+  if (fs.existsSync(rutaIndex)) {
+    res.sendFile(rutaIndex);
+  } else {
+    res.status(404).send("Error crítico: El archivo index.html no se encuentra en el repositorio de GitHub. Por favor, verifica que lo hayas subido.");
+  }
 });
 
 // Ruta API real para el procesamiento de datos con la IA
