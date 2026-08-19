@@ -10,8 +10,9 @@ const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY
 });
 
-// ENTREGA AUTOMÁTICA: La Landing Page está integrada directamente en la memoria del servidor
+// ENTREGA AUTOMÁTICA CON FORMATO HTML CORE CORREGIDO
 app.get('/', (req, res) => {
+  res.setHeader('Content-Type', 'text/html'); // Corrección para activar los estilos CSS y JavaScript
   res.send(`
 <!DOCTYPE html>
 <html lang="es">
@@ -40,7 +41,7 @@ app.get('/', (req, res) => {
 
             <div class="border border-slate-800 rounded-xl p-6 bg-slate-950/40 space-y-4">
                 <label class="block text-xs font-mono uppercase tracking-widest text-slate-400">Texto o Datos a Procesar:</label>
-                <textarea id="input-datos" class="w-full h-32 bg-slate-900 border border-slate-800 rounded-lg p-3 text-sm text-slate-100 placeholder-slate-600 focus:outline-none focus:border-cyan-500 font-mono" placeholder="Pega aquí tus datos corruptos, listas desordenadas o textos sucios..."></textarea>
+                <textarea id="input-datos" class="w-full h-32 bg-slate-950 border border-slate-800 rounded-lg p-3 text-sm text-slate-100 placeholder-slate-600 focus:outline-none focus:border-cyan-500 font-mono" placeholder="Pega aquí tus datos corruptos, listas desordenadas o textos sucios..."></textarea>
                 
                 <div class="flex flex-col sm:flex-row gap-4 items-center justify-between pt-2">
                     <div class="w-full sm:w-auto">
@@ -136,7 +137,6 @@ app.get('/', (req, res) => {
   `);
 });
 
-// Endpoint real del motor de procesamiento de IA
 app.post('/api/extract', async (req, res) => {
   const { text, token } = req.body;
 
