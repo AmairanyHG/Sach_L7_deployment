@@ -1,21 +1,29 @@
 const express = require('express');
 const cors = require('cors');
+const path = require('path');
 const { OpenAI } = require('openai');
 
 const app = express();
 app.use(cors());
 app.use(express.json());
 
-// Configuración de producción: la clave se lee de forma invisible desde las variables de Render
+// CONFIGURACIÓN CLAVE: Indica al servidor que use y sirva la carpeta actual
+app.use(express.static(__dirname));
+
+// Configuración de la IA leyendo tu variable oculta en Render
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY
 });
 
-// Ruta API real para recibir datos del index.html y procesarlos con GPT-4o-mini
+// REGLA DE ENTREGA: Cuando alguien entre a la URL raíz (/), mándale el index.html de inmediato
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'index.html'));
+});
+
+// Ruta API real para el procesamiento de datos con la IA
 app.post('/api/extract', async (req, res) => {
   const { text, token } = req.body;
 
-  // Validación de seguridad para proteger tu saldo de OpenAI contra bots maliciosos
   if (!token || token !== "ALUMNO_PRO_2026") {
     return res.status(401).json({ error: "Token de acceso inválido o expirado." });
   }
@@ -25,29 +33,23 @@ app.post('/api/extract', async (req, res) => {
   }
 
   try {
-    // Llamada HTTP real hacia los servidores oficiales de OpenAI
     const response = await openai.chat.completions.create({
-      model: "gpt-4o-mini", // Modelo optimizado para mantener costos ultra bajos y alto margen de ganancia
+      model: "gpt-4o-mini",
       messages: [
         { 
           role: "system", 
           content: "Eres un extractor de datos experto y preciso. Toma el texto desordenado o código proporcionado por el usuario y devuélvelo estructurado en una tabla markdown limpia o un formato JSON perfectamente legible. No agregues charlas ni explicaciones, solo entrega el resultado formateado." 
         },
-        { 
-          role: "user", 
-          content: text 
-        }
+        { role: "user", content: text }
       ]
     });
 
-    // Envío del resultado final procesado de vuelta a la página web del cliente
     res.json({ result: response.choices.message.content });
   } catch (error) {
-    console.error("Error detectado en el motor de OpenAI:", error.message);
+    console.error("Error detectado en OpenAI:", error.message);
     res.status(500).json({ error: "Error interno en el motor de procesamiento de IA." });
   }
 });
 
-// Encendido del servidor en el puerto asignado automáticamente por Render
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`Servidor SACH L7 activo en puerto ${PORT}`));
